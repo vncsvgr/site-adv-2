@@ -77,7 +77,11 @@ const Footer = () => {
 
         <div className="border-t border-gray-800 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
           <p>&copy; {new Date().getFullYear()} Silva & Advogados. Todos os direitos reservados.</p>
-          <p>Desenvolvido com excelência</p>
+          <div className="flex items-center gap-4">
+            <Link to="/admin" className="opacity-30 hover:opacity-100 transition-opacity">Acesso restrito</Link>
+            <span>|</span>
+            <p>Desenvolvido com excelência</p>
+          </div>
         </div>
       </div>
     </footer>
