@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Scale, Briefcase, Users, ShieldCheck, Award, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useSiteData } from '../contexts/SiteDataContext';
 
 const Home = () => {
+  const { banners, services: siteServices, testimonials: siteTestimonials } = useSiteData();
+
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
     whileInView: { opacity: 1, y: 0 },
@@ -10,11 +13,17 @@ const Home = () => {
     transition: { duration: 0.6 }
   };
 
-  const services = [
-    { icon: <Scale size={32} />, title: 'Direito Civil', desc: 'Atuação em contratos, responsabilidade civil, posse e propriedade, visando a proteção dos seus interesses.' },
-    { icon: <Briefcase size={32} />, title: 'Direito Empresarial', desc: 'Assessoria completa para empresas, desde a constituição até a elaboração de contratos complexos.' },
-    { icon: <Users size={32} />, title: 'Direito de Família', desc: 'Tratativa humanizada em divórcios, pensão alimentícia, guarda e inventários.' }
-  ];
+  // Use first active banner or fallback
+  const activeBanner = banners.find(b => b.active !== false) || banners[0] || {};
+
+  // Show first 3 services on homepage
+  const homeServices = siteServices.slice(0, 3);
+
+  const iconMap = {
+    Scale: <Scale size={32} />,
+    Briefcase: <Briefcase size={32} />,
+    Users: <Users size={32} />,
+  };
 
   const differentials = [
     { icon: <Award className="text-primary-500" size={40} />, title: 'Experiência Comprovada', desc: 'Mais de 15 anos de atuação com alto índice de sucesso em casos complexos.' },
@@ -22,19 +31,14 @@ const Home = () => {
     { icon: <Clock className="text-primary-500" size={40} />, title: 'Agilidade no Atendimento', desc: 'Respostas rápidas e dedicação exclusiva para garantir a melhor estratégia.' }
   ];
 
-  const testimonials = [
-    { text: "A equipe da Silva & Advogados resolveu meu caso empresarial com uma eficiência impressionante. Recomendo de olhos fechados.", author: "Carlos M., Empresário" },
-    { text: "Profissionais extremamente humanos e atenciosos. Me deram todo o suporte necessário durante um momento muito difícil da minha vida.", author: "Ana P., Professora" }
-  ];
-
   return (
     <div className="w-full">
-      {/* Hero Section */}
+      {/* Hero Section - Dynamic from banners */}
       <section className="relative h-screen flex items-center bg-gray-900 overflow-hidden">
         <div className="absolute inset-0 bg-black/60 z-10"></div>
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1436450412740-6b988f486c6b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')" }}
+          style={{ backgroundImage: `url('${activeBanner.image_url || 'https://images.unsplash.com/photo-1436450412740-6b988f486c6b?q=80&w=1170&auto=format&fit=crop'}')` }}
         ></div>
 
         <div className="container mx-auto px-4 md:px-8 relative z-20">
@@ -49,15 +53,20 @@ const Home = () => {
               <span className="text-primary-500 font-semibold uppercase tracking-widest text-sm">Escritório de Advocacia</span>
             </div>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold text-white leading-tight mb-6">
-              Defendendo seus direitos com <span className="text-primary-500 italic">excelência</span>
+              {activeBanner.title ? (
+                <>{activeBanner.title.includes('excelência') ? (
+                  <>Defendendo seus direitos com <span className="text-primary-500 italic">excelência</span></>
+                ) : activeBanner.title}</>
+              ) : (
+                <>Defendendo seus direitos com <span className="text-primary-500 italic">excelência</span></>
+              )}
             </h1>
             <p className="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl leading-relaxed">
-              Estratégias jurídicas personalizadas para proteger o seu patrimônio,
-              sua empresa e a sua família com segurança e agilidade.
+              {activeBanner.subtitle || 'Estratégias jurídicas personalizadas para proteger o seu patrimônio, sua empresa e a sua família com segurança e agilidade.'}
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/contato" className="bg-primary-600 hover:bg-primary-500 text-white px-8 py-4 rounded-sm font-medium transition-all text-center">
-                Agendar Consulta
+              <Link to={activeBanner.button_link || '/contato'} className="bg-primary-600 hover:bg-primary-500 text-white px-8 py-4 rounded-sm font-medium transition-all text-center">
+                {activeBanner.button_text || 'Agendar Consulta'}
               </Link>
               <Link to="/sobre" className="bg-transparent border border-white hover:bg-white hover:text-gray-900 text-white px-8 py-4 rounded-sm font-medium transition-all text-center">
                 Conheça o Escritório
@@ -102,7 +111,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Services */}
+      {/* Services - Dynamic */}
       <section className="py-24 bg-gray-50">
         <div className="container mx-auto px-4 md:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -112,9 +121,9 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {services.map((service, index) => (
+            {homeServices.map((service, index) => (
               <motion.div
-                key={index}
+                key={service.id || index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -122,10 +131,10 @@ const Home = () => {
                 className="bg-white p-10 rounded-sm shadow-md hover:shadow-xl transition-shadow border border-gray-100 group"
               >
                 <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center text-primary-600 mb-6 group-hover:bg-primary-600 group-hover:text-white transition-colors">
-                  {service.icon}
+                  {iconMap[service.icon] || <Scale size={32} />}
                 </div>
                 <h4 className="text-xl font-serif font-bold text-gray-900 mb-4">{service.title}</h4>
-                <p className="text-gray-600 mb-6 leading-relaxed">{service.desc}</p>
+                <p className="text-gray-600 mb-6 leading-relaxed">{service.description}</p>
                 <Link to="/servicos" className="inline-flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-900">
                   Saiba mais <ArrowRight size={16} />
                 </Link>
@@ -168,7 +177,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Testimonials - Dynamic */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-4 md:px-8">
           <div className="text-center mb-16">
@@ -177,9 +186,9 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {testimonials.map((test, index) => (
+            {siteTestimonials.map((test, index) => (
               <motion.div
-                key={index}
+                key={test.id || index}
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
@@ -192,11 +201,11 @@ const Home = () => {
                 </p>
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-bold font-serif">
-                    {test.author.charAt(0)}
+                    {(test.author_name || test.author || '').charAt(0)}
                   </div>
                   <div>
-                    <p className="font-bold text-gray-900">{test.author.split(',')[0]}</p>
-                    <p className="text-sm text-gray-500">{test.author.split(',')[1]}</p>
+                    <p className="font-bold text-gray-900">{test.author_name || (test.author || '').split(',')[0]}</p>
+                    <p className="text-sm text-gray-500">{test.author_role || (test.author || '').split(',')[1]}</p>
                   </div>
                 </div>
               </motion.div>

@@ -1,46 +1,19 @@
 import { motion } from 'framer-motion';
 import { Scale, Briefcase, Users, FileText, Landmark, ShieldAlert } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useSiteData } from '../contexts/SiteDataContext';
+
+const iconMap = {
+  Scale: <Scale size={40} />,
+  Briefcase: <Briefcase size={40} />,
+  Users: <Users size={40} />,
+  FileText: <FileText size={40} />,
+  Landmark: <Landmark size={40} />,
+  ShieldAlert: <ShieldAlert size={40} />,
+};
 
 const Services = () => {
-  const services = [
-    {
-      id: "civil",
-      icon: <Scale size={40} />,
-      title: 'Direito Civil',
-      desc: 'Atuação consultiva e contenciosa em questões envolvendo contratos, responsabilidade civil, obrigações, posse e propriedade. Buscamos sempre a melhor solução para proteger o patrimônio e os direitos civis dos nossos clientes.',
-    },
-    {
-      id: "empresarial",
-      icon: <Briefcase size={40} />,
-      title: 'Direito Empresarial',
-      desc: 'Assessoria jurídica completa para o ambiente de negócios. Inclui estruturação societária, fusões e aquisições, contratos mercantis, recuperação de crédito e compliance, garantindo segurança jurídica para as operações corporativas.',
-    },
-    {
-      id: "trabalhista",
-      icon: <Users size={40} />,
-      title: 'Direito Trabalhista',
-      desc: 'Defesa e orientação tanto para empregadores quanto para empregados. Atuação em reclamações trabalhistas, auditorias (due diligence), elaboração de contratos de trabalho e negociações sindicais, mitigando riscos.',
-    },
-    {
-      id: "familia",
-      icon: <FileText size={40} />,
-      title: 'Direito de Família e Sucessões',
-      desc: 'Atendimento humanizado e discreto em casos de divórcio, união estável, guarda de filhos, pensão alimentícia, inventários e planejamento sucessório patrimonial familiar.',
-    },
-    {
-      id: "tributario",
-      icon: <Landmark size={40} />,
-      title: 'Direito Tributário',
-      desc: 'Planejamento tributário estratégico, recuperação de créditos fiscais e defesa em execuções fiscais. Nosso objetivo é otimizar a carga tributária das empresas de forma legal e segura.',
-    },
-    {
-      id: "consumidor",
-      icon: <ShieldAlert size={40} />,
-      title: 'Direito do Consumidor',
-      desc: 'Proteção nas relações de consumo, defesa contra práticas abusivas, indenizações por danos morais e materiais, além de assessoria preventiva para empresas evitarem litígios com clientes.',
-    }
-  ];
+  const { services } = useSiteData();
 
   return (
     <div className="w-full pt-24 pb-12">
@@ -65,7 +38,7 @@ const Services = () => {
         </div>
       </section>
 
-      {/* Services List */}
+      {/* Services List - Dynamic */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
@@ -80,14 +53,14 @@ const Services = () => {
               >
                 <div className="flex items-start gap-6">
                   <div className="text-primary-500 shrink-0 mt-1">
-                    {service.icon}
+                    {iconMap[service.icon] || <Scale size={40} />}
                   </div>
                   <div>
                     <h2 className="text-2xl font-serif font-bold text-gray-900 mb-4 group-hover:text-primary-600 transition-colors">
                       {service.title}
                     </h2>
                     <p className="text-gray-600 leading-relaxed mb-6">
-                      {service.desc}
+                      {service.description || service.desc}
                     </p>
                     <Link 
                       to="/contato" 

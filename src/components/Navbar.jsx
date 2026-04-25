@@ -20,19 +20,23 @@ const Navbar = () => {
     { name: 'Sobre', path: '/sobre' },
     { name: 'Serviços', path: '/servicos' },
     { name: 'Blog', path: '/blog' },
-    { name: 'Contato', path: '/contato' },
   ];
+
+  const isHomePage = location.pathname === '/';
+  const useLightText = !isHomePage || !isScrolled;
+  
+  const headerBgClass = isHomePage 
+    ? (isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-3' : 'bg-transparent py-5')
+    : `bg-[#101828] ${isScrolled ? 'py-3 shadow-md' : 'py-5'}`;
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-3' : 'bg-transparent py-5'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${headerBgClass}`}
     >
       <div className="container mx-auto px-4 md:px-8 flex justify-between items-center">
         <Link to="/" className="flex items-center gap-2">
-          <Scale className={`h-8 w-8 ${isScrolled ? 'text-primary-600' : 'text-primary-500'}`} />
-          <span className={`font-serif text-2xl font-bold tracking-tight ${isScrolled ? 'text-gray-900' : 'text-white'}`}>
+          <Scale className={`h-8 w-8 ${!useLightText ? 'text-primary-600' : 'text-primary-500'}`} />
+          <span className={`font-serif text-2xl font-bold tracking-tight ${!useLightText ? 'text-gray-900' : 'text-white'}`}>
             Silva & Advogados
           </span>
         </Link>
@@ -47,7 +51,7 @@ const Navbar = () => {
                   className={`text-sm font-medium uppercase tracking-wider transition-colors hover:text-primary-500 ${
                     location.pathname === link.path
                       ? 'text-primary-500'
-                      : isScrolled
+                      : !useLightText
                       ? 'text-gray-600'
                       : 'text-gray-200'
                   }`}
@@ -72,9 +76,9 @@ const Navbar = () => {
           aria-label="Toggle menu"
         >
           {isOpen ? (
-            <X className={isScrolled ? 'text-gray-900' : 'text-white'} />
+            <X className={!useLightText ? 'text-gray-900' : 'text-white'} />
           ) : (
-            <Menu className={isScrolled ? 'text-gray-900' : 'text-white'} />
+            <Menu className={!useLightText ? 'text-gray-900' : 'text-white'} />
           )}
         </button>
       </div>

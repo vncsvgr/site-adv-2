@@ -1,33 +1,15 @@
 import { motion } from 'framer-motion';
+import { useSiteData } from '../contexts/SiteDataContext';
 
 const About = () => {
+  const { team } = useSiteData();
+
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true },
     transition: { duration: 0.6 }
   };
-
-  const team = [
-    {
-      name: "Dr. Roberto Silva",
-      role: "Sócio Fundador",
-      specialty: "Direito Empresarial",
-      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      name: "Dra. Amanda Costa",
-      role: "Sócia Administradora",
-      specialty: "Direito Civil e Família",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      name: "Dr. Marcos Oliveira",
-      role: "Advogado Sênior",
-      specialty: "Direito Trabalhista",
-      image: "https://images.unsplash.com/photo-1662104935762-707db0439ecd?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    }
-  ];
 
   return (
     <div className="w-full pt-24 pb-12">
@@ -108,7 +90,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Team */}
+      {/* Team - Dynamic */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 md:px-8">
           <div className="text-center mb-16">
@@ -121,7 +103,7 @@ const About = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {team.map((member, index) => (
               <motion.div
-                key={index}
+                key={member.id || index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -130,12 +112,12 @@ const About = () => {
               >
                 <div className="relative overflow-hidden mb-6">
                   <img
-                    src={member.image}
+                    src={member.image_url || member.image}
                     alt={member.name}
                     className="w-full h-[400px] object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                    <p className="text-white text-sm">Com vasta experiência em litígios complexos e negociações estratégicas.</p>
+                    <p className="text-white text-sm">{member.bio || 'Com vasta experiência em litígios complexos e negociações estratégicas.'}</p>
                   </div>
                 </div>
                 <h3 className="text-xl font-serif font-bold text-gray-900">{member.name}</h3>

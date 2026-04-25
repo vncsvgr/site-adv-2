@@ -20,14 +20,18 @@ const ContactSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-      setFormData({ name: '', email: '', phone: '', message: '' });
-      
-      setTimeout(() => setIsSuccess(false), 5000);
-    }, 1500);
+    const whatsappNumber = "5511999999999";
+    const text = `*Novo Contato pelo Site*\n\n*Nome:* ${formData.name}\n*E-mail:* ${formData.email || 'Não informado'}\n*Telefone:* ${formData.phone}\n\n*Mensagem:*\n${formData.message}`;
+    const encodedText = encodeURIComponent(text);
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedText}`;
+    
+    window.open(whatsappUrl, '_blank');
+    
+    setIsSubmitting(false);
+    setIsSuccess(true);
+    setFormData({ name: '', email: '', phone: '', message: '' });
+    
+    setTimeout(() => setIsSuccess(false), 5000);
   };
 
   return (
@@ -77,12 +81,11 @@ const ContactSection = () => {
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
+                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">E-mail (Opcional)</label>
                       <input
                         type="email"
                         id="email"
                         name="email"
-                        required
                         value={formData.email}
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all"
