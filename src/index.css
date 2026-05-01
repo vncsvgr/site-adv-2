@@ -2,10 +2,13 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary-500: #d4af37; /* Gold */
-  --color-primary-600: #aa8a29; /* Darker Gold */
-  --color-primary-900: #1a1a1a; /* Almost Black */
-  
+  --color-primary-500: #d4af37;
+  /* Gold */
+  --color-primary-600: #aa8a29;
+  /* Darker Gold */
+  --color-primary-900: #1a1a1a;
+  /* Almost Black */
+
   --font-serif: "Playfair Display", serif;
   --font-sans: "Inter", sans-serif;
 }
@@ -14,12 +17,58 @@
   body {
     @apply font-sans bg-gray-50 text-gray-900 antialiased;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-serif;
   }
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+.footer-credits {
+  background: #070c16;
+  padding: 0.5rem 0;
+  color: #94a3b8;
+  font-size: .85rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.footer-credits .container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  flex-wrap: wrap
+}
+
+.footer-credits .credits-logo {
+  height: 25px;
+  width: auto;
+  opacity: .8;
+  transition: var(--transition);
+  filter: grayscale(100%) brightness(1.5)
+}
+
+.footer-credits a:hover .credits-logo {
+  opacity: 1;
+  filter: grayscale(0) brightness(1)
 }
